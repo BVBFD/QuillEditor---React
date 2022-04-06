@@ -7,7 +7,7 @@ import helmet from 'helmet';
 import multer from 'multer';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import fs from 'fs';
+// import fs from 'fs';
 
 dotenv.config();
 
@@ -39,16 +39,18 @@ app.post('/img/upload', upload.single('file'), (req, res, next) => {
   res.status(200).json(`http://localhost:8080/images/${req.body.name}`);
 });
 
-app.delete('/img/remove/:fileName', async (req, res, next) => {
-  if (fs.existsSync(`/images/${req.params.fileName}`)) {
-    try {
-      fs.unlinkSync(`/images/${req.params.fileName}`);
-      console.log('image deleted');
-    } catch (error) {
-      console.log(error);
-    }
-  }
-});
+// app.delete('/img/remove/:fileName', async (req, res, next) => {
+//   console.log(req.params.fileName);
+//   if (fs.existsSync(`images/${req.params.fileName}`)) {
+//     try {
+//       fs.unlinkSync(`images/${req.params.fileName}`);
+//       console.log('image deleted');
+//       res.status(204).json('image deleted');
+//     } catch (error) {
+//       console.log(error);
+//     }
+//   }
+// });
 
 app.use((req, res, next) => {
   res.sendStatus(404);

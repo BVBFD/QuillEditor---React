@@ -10,6 +10,7 @@ import './App.css';
 
 const App = (props) => {
   const [text, setText] = useState('');
+  // const [deleteImg, setDeleteImg] = useState('');
   const quillRef = useRef();
 
   console.log(text);
@@ -118,15 +119,31 @@ const App = (props) => {
 
   console.log(editorText);
 
-  const detectRemoveImg = (e) => {
-    console.log(text.lastIndexOf('img'));
-    console.log(e.code);
-    if (text.lastIndexOf('img') !== -1) {
-      let firstSplit = text.split('src="')[1];
-      let secondSplit = firstSplit.split('"></p>')[0];
-      console.log(secondSplit);
-    }
-  };
+  // const detectRemoveImg = async (e) => {
+  //   console.log(text.lastIndexOf('img'));
+  //   console.log(e.code);
+  //   if (text.lastIndexOf('img') !== -1) {
+  //     let firstSplit = text.split('src="')[1];
+  //     let secondSplit = firstSplit.split('"></p>')[0];
+  //     let fileName = secondSplit.split('images/')[1];
+
+  //     if (e.code === 'Backspace' && text.lastIndexOf('img') === -1) {
+  //       firstSplit && setDeleteImg(fileName.split('">')[0]);
+  //       console.log(deleteImg);
+  //       const res = await fetch(
+  //         `http://localhost:8080/img/remove/${deleteImg}`,
+  //         {
+  //           method: 'DELETE',
+  //           headers: {
+  //             'Content-Type': 'application/json',
+  //           },
+  //         }
+  //       );
+  //       const result = await res.json();
+  //       console.log(result);
+  //     }
+  //   }
+  // };
 
   return (
     <>
@@ -137,7 +154,7 @@ const App = (props) => {
           formats={formats}
           value={text}
           onChange={setText}
-          onKeyDown={detectRemoveImg}
+          // onKeyDown={detectRemoveImg}
           theme={'snow'}
         />
         <button type='submit'>Input</button>
