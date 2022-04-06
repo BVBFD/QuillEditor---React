@@ -2,12 +2,21 @@ import React, { useMemo, useState, useRef } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
+import hljs from 'highlight.js';
+import 'react-quill/dist/quill.core.css';
+import 'react-quill/dist/quill.bubble.css';
+import 'highlight.js/styles/vs2015.css';
+import './App.css';
 
 const App = (props) => {
   const [text, setText] = useState('');
   const quillRef = useRef();
 
   console.log(text);
+
+  const videoHandler = () => {
+    console.log('video handler on!!');
+  };
 
   const imageHandler = (e) => {
     console.log('에디터에서 이미지 버튼을 클릭하면 이 핸들러가 시작됩니다!');
@@ -66,17 +75,25 @@ const App = (props) => {
     });
   };
 
+  hljs.configure({
+    languages: ['javascript', 'html', 'css', 'react', 'sass', 'typescript'],
+  });
+
   const modules = useMemo(() => {
     return {
+      syntax: {
+        highlight: (text) => hljs.highlightAuto(text).value,
+      },
       toolbar: {
         container: [
-          ['image'],
           [{ header: [1, 2, 3, false] }],
           ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+          ['image', 'video', 'code-block'],
         ],
         handlers: {
           // 이미지 처리는 우리가 직접 imageHandler라는 함수로 처리할 것이다.
           image: imageHandler,
+          video: videoHandler,
         },
       },
     };
@@ -90,18 +107,49 @@ const App = (props) => {
     'strike',
     'blockquote',
     'image',
+    'code-block',
   ];
 
+  const inputText = (e) => {
+    e.preventDefault();
+  };
+
+  const editorText = text;
+
+  console.log(editorText);
+
+  const detectRemoveImg = (e) => {
+    console.log(text.lastIndexOf('img'));
+    console.log(e.code);
+    if (text.lastIndexOf('img') !== -1) {
+      let firstSplit = text.split('src="')[1];
+      let secondSplit = firstSplit.split('"></p>')[0];
+      console.log(secondSplit);
+    }
+  };
+
   return (
-    <div>
-      <ReactQuill
-        ref={quillRef}
-        modules={modules}
-        formats={formats}
-        value={text}
-        onChange={setText}
-      />
-    </div>
+    <>
+      <form onSubmit={inputText}>
+        <ReactQuill
+          ref={quillRef}
+          modules={modules}
+          formats={formats}
+          value={text}
+          onChange={setText}
+          onKeyDown={detectRemoveImg}
+          theme={'snow'}
+        />
+        <button type='submit'>Input</button>
+      </form>
+      <div className='ql-snow'>
+        <div
+          className='ql-editor'
+          dangerouslySetInnerHTML={{ __html: editorText }}
+          style={{ width: '98vw', height: 'fitContent' }}
+        ></div>
+      </div>
+    </>
   );
 };
 
