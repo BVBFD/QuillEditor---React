@@ -9,16 +9,21 @@ import 'highlight.js/styles/vs2015.css';
 import './App.css';
 
 const App = (props) => {
+  // 에디터 내용 변화에 따른 setText()!
   const [text, setText] = useState('');
   // const [deleteImg, setDeleteImg] = useState('');
+  // 실시간 에디터 변화 감지를 위한 에디터 ref 설정
   const quillRef = useRef();
 
+  // 실시간 에디터 내용 나옴
   console.log(text);
 
+  // 향후 비디오 파일 서버에 저장후 url만 가지고 올수 있도록 custom 예정
   const videoHandler = () => {
     console.log('video handler on!!');
   };
 
+  // 이미지 서버에 저장후 url만 가지고 올수 있도록 custom!
   const imageHandler = (e) => {
     console.log('에디터에서 이미지 버튼을 클릭하면 이 핸들러가 시작됩니다!');
 
@@ -80,6 +85,7 @@ const App = (props) => {
     languages: ['javascript', 'html', 'css', 'react', 'sass', 'typescript'],
   });
 
+  // Quill editor full toolbar 완성
   const modules = useMemo(() => {
     return {
       syntax: {
@@ -89,7 +95,24 @@ const App = (props) => {
         container: [
           [{ header: [1, 2, 3, false] }],
           ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-          ['image', 'video', 'code-block'],
+          ['image', 'video', 'link', 'code-block', 'blockquote'],
+          [
+            {
+              size: ['small', false, 'large', 'huge'],
+            },
+          ],
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          [{ script: 'sub' }, { script: 'super' }],
+          [{ indent: '-1' }, { indent: '+1' }],
+          [{ direction: 'rtl' }],
+          [{ color: [] }, { background: [] }],
+          [
+            {
+              font: [],
+            },
+          ],
+          [{ align: [] }],
+          ['clean'],
         ],
         handlers: {
           // 이미지 처리는 우리가 직접 imageHandler라는 함수로 처리할 것이다.
@@ -100,25 +123,37 @@ const App = (props) => {
     };
   }, []);
 
+  // Quill editor full formats 완성
   const formats = [
     'header',
+    'font',
+    'size',
     'bold',
     'italic',
     'underline',
+    'align',
     'strike',
+    'script',
     'blockquote',
+    'background',
+    'list',
+    'bullet',
+    'indent',
+    'link',
     'image',
+    'color',
     'code-block',
   ];
 
   const inputText = (e) => {
     e.preventDefault();
   };
+  // 서버에 저장 버튼
 
   const editorText = text;
+  // innnerHTML을 통해서 웹사이트 적용
 
-  console.log(editorText);
-
+  // 에디터 내의 이미지 지우기 (서버사이드) 고민 중
   // const detectRemoveImg = async (e) => {
   //   console.log(text.lastIndexOf('img'));
   //   console.log(e.code);
