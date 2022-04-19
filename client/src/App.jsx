@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef } from 'react';
+import React, { useMemo, useState, useRef, createElement } from 'react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
@@ -21,6 +21,19 @@ const App = (props) => {
   // 향후 비디오 파일 서버에 저장후 url만 가지고 올수 있도록 custom 예정
   const videoHandler = () => {
     console.log('video handler on!!');
+    const getVideoUrl = (url) => {
+      return url;
+    };
+
+    const editor = quillRef.current.getEditor();
+    let url = prompt('Enter Video URL: ');
+    url = getVideoUrl(url);
+    // let range = editor.getSelection();
+    if (url != null) {
+      console.log(url);
+      editor.root.innerHTML =
+        editor.root.innerHTML + `<p><iframe src=${url} crossOrigin /></p>`;
+    }
   };
 
   // 이미지 서버에 저장후 url만 가지고 올수 있도록 custom!
@@ -73,8 +86,8 @@ const App = (props) => {
         editor.insertEmbed(range.index, 'image', IMG_URL);
         // 향후 교차출처 에러시 사용 메소드
         // document
-        //   .querySelectorAll('img')[0]
-        //   .setAttribute('crossOrigin', 'anonymous');
+        //   .querySelectorAll('img')
+        //   .forEach((img) => img.setAttribute('crossOrigin', 'anonymous'));
       } catch (error) {
         console.log('실패!!!');
       }
